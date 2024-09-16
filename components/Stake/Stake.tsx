@@ -37,7 +37,7 @@ export const Stake = () => {
       address: contractAddress,
       abi: contractABI,
       functionName: 'verifyAndExecute',
-      args: [value, signature],
+      args: [value, signature.signature],
     });
     console.log(response);
   };
