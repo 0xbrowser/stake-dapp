@@ -26,28 +26,15 @@ export const Stake = () => {
     }
   };
 
-  // const verifySig = async () => {
-  //   console.log('loading');
-  //   const { request } = await publicClient.simulateContract({
-  //     account,
-  //     address: contractAddress,
-  //     abi: contractABI,
-  //     functionName: 'verifyAndExecute',
-  //     args: [value, signature],
-  //   });
-  //   const txhash = await walletClient.writeContract(request);
-  //   console.log('txhash:', txhash);
-  // };
-
-  const { writeContract, isLoading, data } = useWriteContract();
+  const { writeContract, data } = useWriteContract();
   const verifySig = async () => {
+    console.log('confirming...');
     const response = await writeContract({
       address: contractAddress,
       abi: contractABI,
       functionName: 'verifyAndExecute',
       args: [value, signature],
     });
-
     console.log(response);
   };
 
@@ -56,7 +43,7 @@ export const Stake = () => {
       <Stack align="center">
         <Group justify="flex-end" p="lg" w="100%">
           <Connect />
-          {isConnected ? "connected" : "connect"}
+          {isConnected ? 'connected' : 'connect'}
         </Group>
         <Stack w="50%" mt={50}>
           <Group justify="space-between" p="xs">
@@ -93,7 +80,7 @@ export const Stake = () => {
               disabled={signature ? false : true}
               onClick={() => verifySig()}
             >
-              {isLoading ? 'Confirming...' : 'Verify'}
+              Verify
             </Button>
           </Group>
           <Group justify="space-between" p="xs">
