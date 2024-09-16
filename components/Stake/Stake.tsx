@@ -9,7 +9,13 @@ const contractAddress = '0x5063e2d72b2a3b4bdfb2ec1bb573fd806d3c5fa2';
 
 export const Stake = () => {
   const [value, setValue] = useState('Stake 0.1ETH');
-  const [signature, setSignature] = useState();
+  const [signature, setSignature] = useState({
+    messageHash: '',
+    r: '',
+    s: '',
+    signature: '',
+    v: '',
+  });
 
   const handleSubmit = async () => {
     console.log('loading');
