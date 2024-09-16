@@ -13,17 +13,28 @@ pk = "8445feb1179fd23ab9112f5b37baafa94f66f42eb02acad4684379aa6ed7c0c7"
 private_key = bytes.fromhex(pk.replace(" ", ""))
 account = w3.eth.account.from_key(private_key)
 
+
 @app.route('/sign', methods=['POST'])
 def sign_message():
     data = request.json
     msg = data.get('message')
-    
+
     if msg is None:
         return jsonify({'error': 'Message parameter is missing'}), 400
 
     message = encode_defunct(text=msg)
-    signed_message = w3.eth.account.sign_message(message, private_key=private_key)
-    return jsonify({"signature": signed_message.signature.hex()}), 200
+    signed_message = w3.eth.account.sign_message(
+        message, private_key=private_key)
+    print(signed_message)
+    signed_message = {
+        "messageHash": signed_message.messageHash.hex(),
+        "r": str(signed_message.r),
+        "s": str(signed_message.s),
+        "v": str(signed_message.v),
+        "signature": signed_message.signature.hex()
+    }
+    print(signed_message)
+    return jsonify(signed_message), 200
 
 
 if __name__ == '__main__':

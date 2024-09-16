@@ -9,7 +9,7 @@ const contractAddress = '0x5063e2d72b2a3b4bdfb2ec1bb573fd806d3c5fa2';
 
 export const Stake = () => {
   const [value, setValue] = useState('Stake 0.1ETH');
-  const [signature, setSignature] = useState('');
+  const [signature, setSignature] = useState();
 
   const handleSubmit = async () => {
     console.log('loading');
@@ -17,25 +17,12 @@ export const Stake = () => {
       const response = await axios.post('http://localhost:5000/sign', {
         message: value,
       });
-      console.log('signature:', response.data.signature);
-      setSignature(response.data.signature);
+      console.log('signature:', response.data);
+      setSignature(response.data);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-
-  const stringToHex = (str: string): `0x${string}` => {
-    const hex = Array.from(str)
-      .map((char) => {
-        // Convert each character to its hexadecimal representation
-        return ('0' + char.charCodeAt(0).toString(16)).slice(-2); // Ensure two digits
-      })
-      .join('');
-
-    return `0x${hex}` as `0x${string}`; // Cast to the required type
-  };
-
-  const hexSign: `0x${string}` = stringToHex(signature);
 
   const { writeContract, data } = useWriteContract();
   const verifySig = async () => {
@@ -44,7 +31,7 @@ export const Stake = () => {
       address: contractAddress,
       abi: contractABI,
       functionName: 'verifyAndExecute',
-      args: [value, hexSign],
+      args: [value, signature],
     });
     console.log(response);
   };
@@ -80,7 +67,15 @@ export const Stake = () => {
             </Button>
           </Group>
           <Group justify="space-between" p="xs">
-            <Text>{'Signature: ' + signature.slice(0, 9) + '...' + signature.slice(-10, -1)}</Text>
+            <Group>
+              <Text>Signature:</Text>
+              {signature && (
+                <Text>
+                  {signature.signature?.slice(0, 9) + '...' + signature.signature?.slice(-10, -1)}
+                </Text>
+              )}
+            </Group>
+
             <Button
               variant="filled"
               color="#B0A6EE"
