@@ -24,15 +24,18 @@ export const Stake = () => {
     }
   };
 
-  const stringToHex = (str: string) => {
-    return str
-      .split('')
+  const stringToHex = (str: string): `0x${string}` => {
+    const hex = Array.from(str)
       .map((char) => {
-        return ('0' + char.charCodeAt(0).toString(16)).slice(-2);
+        // Convert each character to its hexadecimal representation
+        return ('0' + char.charCodeAt(0).toString(16)).slice(-2); // Ensure two digits
       })
       .join('');
+
+    return `0x${hex}` as `0x${string}`; // Cast to the required type
   };
-  const hexSign = stringToHex(signature);
+
+  const hexSign: `0x${string}` = stringToHex(signature);
 
   const { writeContract, data } = useWriteContract();
   const verifySig = async () => {
