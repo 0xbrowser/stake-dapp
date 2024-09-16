@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Group, Text, Stack, Input, Button } from '@mantine/core';
 import { Connect } from '../Connect/Connect';
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useAccount } from 'wagmi';
 import { contractABI } from '../../smartcontract/stake';
 import axios from 'axios';
-import { account, publicClient, walletClient } from './config';
 
 const contractAddress = '0x5063e2d72b2a3b4bdfb2ec1bb573fd806d3c5fa2';
 
 export const Stake = () => {
   const [value, setValue] = useState('Stake 0.1ETH');
   const [signature, setSignature] = useState('');
+
+  const { isConnected } = useAccount();
 
   const handleSubmit = async () => {
     console.log('loading');
@@ -55,6 +56,7 @@ export const Stake = () => {
       <Stack align="center">
         <Group justify="flex-end" p="lg" w="100%">
           <Connect />
+          {isConnected ? "connected" : "connect"}
         </Group>
         <Stack w="50%" mt={50}>
           <Group justify="space-between" p="xs">

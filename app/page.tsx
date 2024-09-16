@@ -1,9 +1,5 @@
 'use client';
 
-import { Home } from '../components/Home/Home';
-import { BaseLayout } from '@/components/PageLayout/BaseLayout';
-import { useState, useEffect } from 'react';
-import { BackgroundImg } from '@/components/BackgroundImg/BackgroundImg';
 import { Stake } from '@/components/Stake/Stake';
 
 import '@rainbow-me/rainbowkit/styles.css';
