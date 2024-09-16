@@ -33,11 +33,12 @@ export const Stake = () => {
   const { writeContract, data } = useWriteContract();
   const verifySig = async () => {
     console.log('confirming...');
+    const sig = signature.signature as `0x${string}`;
     const response = await writeContract({
       address: contractAddress,
       abi: contractABI,
       functionName: 'verifyAndExecute',
-      args: [value, signature.signature],
+      args: [value, sig],
     });
     console.log(response);
   };
