@@ -77,6 +77,25 @@ export const contractABI = [
         type: 'address',
       },
     ],
+    name: 'getStakeAllowance',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+    ],
     name: 'getStakeAmount',
     outputs: [
       {

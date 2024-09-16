@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Group, Text, Stack, Input, Button } from '@mantine/core';
 import { Connect } from '../Connect/Connect';
-import { useWriteContract } from 'wagmi';
 import { contractABI } from '../../smartcontract/stake';
 import axios from 'axios';
+import Web3 from 'web3';
+import { useWeb3React } from '@web3-react/core';
 
-const contractAddress = '0x5063e2d72b2a3b4bdfb2ec1bb573fd806d3c5fa2';
+const contractAddress = '0xddf7670719e77c54567ab95a20a4b4a455ae3895';
 
 export const Stake = () => {
   const [value, setValue] = useState('Stake 0.1ETH');
+  const [allowance, setAllowance] = useState('');
+  const [amount, setAmount] = useState('');
   const [signature, setSignature] = useState({
     messageHash: '',
     r: '',
@@ -16,6 +19,7 @@ export const Stake = () => {
     signature: '',
     v: '',
   });
+  const { account, isActive, connector } = useWeb3React();
 
   const handleSubmit = async () => {
     console.log('loading');
@@ -30,18 +34,98 @@ export const Stake = () => {
     }
   };
 
-  const { writeContract, data } = useWriteContract();
-  const verifySig = async () => {
-    console.log('confirming...');
-    const sig = signature.signature as `0x${string}`;
-    const response = await writeContract({
-      address: contractAddress,
-      abi: contractABI,
-      functionName: 'verifyAndExecute',
-      args: [value, sig],
-    });
-    console.log(response);
+  const verifySig = () => {
+    if (isActive && connector.provider) {
+      const web3 = new Web3(connector.provider);
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const callVerifySig = async () => {
+        try {
+          console.log('try to call verifyAndExecute...');
+          await contract.methods
+            .verifyAndExecute(value, signature.signature)
+            .send({ from: account });
+          console.log('done');
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+      callVerifySig();
+    } else {
+      alert('You must connect to your wallet first!');
+    }
   };
+
+  const callStake = () => {
+    if (isActive && connector.provider) {
+      const web3 = new Web3(connector.provider);
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const callStakeFunc = async () => {
+        try {
+          console.log('try to call stake...');
+          await contract.methods.stake().send({ from: account, value: allowance });
+          console.log('done');
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+      callStakeFunc();
+    } else {
+      alert('You must connect to your wallet first!');
+    }
+  };
+
+  const callWithdraw = () => {
+    if (isActive && connector.provider) {
+      const web3 = new Web3(connector.provider);
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const callWithdrawFunc = async () => {
+        try {
+          console.log('try to call withdraw...');
+          await contract.methods.withdraw(amount).send({ from: account });
+          console.log('done');
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+      callWithdrawFunc();
+    } else {
+      alert('You must connect to your wallet first!');
+    }
+  };
+
+  useEffect(() => {
+    const getOnchainData = setInterval(() => {
+      if (isActive && connector.provider) {
+        const web3 = new Web3(connector.provider);
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+        const callWithdrawFunc = async () => {
+          try {
+            // update allowance
+            await contract.methods
+              .getStakeAllowance(account)
+              .call()
+              .then((_allowance) => {
+                console.log('allowance: ', _allowance);
+                setAllowance(_allowance.toString());
+              });
+            // update amount
+            await contract.methods
+              .getStakeAmount(account)
+              .call()
+              .then((_amount) => {
+                console.log('amount: ', _amount);
+                setAmount(_amount.toString());
+              });
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        };
+        callWithdrawFunc();
+      }
+    }, 5000);
+
+    return () => clearInterval(getOnchainData);
+  }, []);
 
   return (
     <>
@@ -82,43 +166,48 @@ export const Stake = () => {
                 </Text>
               )}
             </Group>
-
             <Button
               variant="filled"
               color="#B0A6EE"
               size="md"
               radius="lg"
               justify="space-between"
-              disabled={signature ? false : true}
+              disabled={signature.signature ? false : true}
               onClick={() => verifySig()}
             >
               Verify
             </Button>
           </Group>
           <Group justify="space-between" p="xs">
-            <Text>Stake allowance: </Text>
+            <Group>
+              <Text>Stake allowance: </Text>
+              <Text>{allowance !== null && `${Number(allowance) / 10 ** 18} ETH`}</Text>
+            </Group>
             <Button
               variant="filled"
               color="#B0A6EE"
               size="md"
               radius="lg"
               justify="space-between"
-              disabled
-              onClick={() => {}}
+              disabled={allowance ? false : true}
+              onClick={callStake}
             >
               Stake
             </Button>
           </Group>
           <Group justify="space-between" p="xs">
-            <Text>Stake amount: </Text>
+            <Group>
+              <Text>Staking amount: </Text>
+              <Text>{amount !== null && `${Number(amount) / 10 ** 18} ETH`}</Text>
+            </Group>
             <Button
               variant="filled"
               color="#B0A6EE"
               size="md"
               radius="lg"
               justify="space-between"
-              disabled
-              onClick={() => {}}
+              disabled={amount ? false : true}
+              onClick={callWithdraw}
             >
               Withdraw
             </Button>
@@ -130,8 +219,8 @@ export const Stake = () => {
               problem
             </Text>
             <Text>3. Get verified by smart contract (message & signature)</Text>
-            <Text>4. Stake what you want</Text>
-            <Text>5. Try to withdraw</Text>
+            <Text>4. Try to stake allowance amount ETH</Text>
+            <Text>5. Try to withdraw staking amount ETH</Text>
           </Stack>
         </Stack>
       </Stack>

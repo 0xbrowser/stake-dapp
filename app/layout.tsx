@@ -4,7 +4,9 @@ import '@mantine/notifications/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from '@vercel/analytics/react';
+
+import EthereumProvider from '@/components/EthereumProvider/EthereumProvider';
 
 export const metadata = {
   title: 'Spiralism',
@@ -42,14 +44,13 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider
-          defaultColorScheme="dark"
-          theme={theme}
-        >
-          <Notifications />
-          {children}
-          <Analytics />
-        </MantineProvider>
+        <EthereumProvider>
+          <MantineProvider defaultColorScheme="dark" theme={theme}>
+            <Notifications />
+            {children}
+            <Analytics />
+          </MantineProvider>
+        </EthereumProvider>
       </body>
     </html>
   );

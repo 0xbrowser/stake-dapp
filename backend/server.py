@@ -18,6 +18,7 @@ account = w3.eth.account.from_key(private_key)
 def sign_message():
     data = request.json
     msg = data.get('message')
+    print(msg)
 
     if msg is None:
         return jsonify({'error': 'Message parameter is missing'}), 400

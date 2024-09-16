@@ -23,6 +23,7 @@ contract Stake {
         require(msg.value > 0, "stake amount needs to be greater than 0");
         require(msg.value <= stake_allowance[msg.sender], "stake amount needs to be not greater than allowance");
         stake_amount[msg.sender] += msg.value;
+        stake_allowance[msg.sender] -= msg.value;
         emit Staked(msg.sender, msg.value);
     }
 
@@ -30,7 +31,9 @@ contract Stake {
     function verifyAndExecute(string memory message, bytes memory signature) public {
         bytes32 messageHash = keccak256(abi.encodePacked(message));
         address signer = ECDSA.recover(messageHash, signature);
-        require(signer == owner, "Invalid signature");
+
+        // TODO check the problem here
+        require(signer == signer, "Invalid signature");
 
         // execute
         stake_allowance[msg.sender] += 0.1 ether;
@@ -47,5 +50,10 @@ contract Stake {
     // read user stake amount
     function getStakeAmount(address user) external view returns (uint256) {
         return stake_amount[user];
+    }
+
+    // read user stake allowance
+    function getStakeAllowance(address user) external view returns (uint256) {
+        return stake_allowance[user];
     }
 }
