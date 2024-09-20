@@ -7,9 +7,9 @@ app = Flask(__name__)
 CORS(app)
 
 w3 = Web3(Web3.HTTPProvider(
-    "https://sepolia.infura.io/v3/29e3a8fb21de47e3915cca2a8d875a84"))
+    "https://sepolia.infura.io/v3/<YOUR_INFURE_API>"))
 
-pk = "8445feb1179fd23ab9112f5b37baafa94f66f42eb02acad4684379aa6ed7c0c7"
+pk = "YOUR PRIVATE KEY"
 private_key = bytes.fromhex(pk.replace(" ", ""))
 account = w3.eth.account.from_key(private_key)
 
