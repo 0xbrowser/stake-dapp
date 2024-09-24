@@ -39,16 +39,16 @@ npm run dev
 
 > ECDSA.recover from OpenZepellin
 
-![](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\contract.png)
+![ECDSA.recover](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\contract.png)
 
 
 
 > Sepolia transactions https://sepolia.etherscan.io/address/0xddf7670719e77c54567ab95a20a4b4a455ae3895
 
-![](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\etherscan.png)
+![Etherscan](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\etherscan.png)
 
 
 
 > Stake DApp UI
 
-![](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\stake_dapp_ui.png)
+![UI/UX](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\stake_dapp_ui.png)
