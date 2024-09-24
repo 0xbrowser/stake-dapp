@@ -20,6 +20,8 @@ npm run dev
 
 
 > Stake DApp with Off-chain Signature Verify Function
+>
+> 具有链下签名与验证功能的质押DApp
 
 
 
@@ -39,16 +41,16 @@ npm run dev
 
 > ECDSA.recover from OpenZepellin
 
-![ECDSA.recover](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\contract.png)
+![contract](./public/contract.png)
 
 
 
 > Sepolia transactions https://sepolia.etherscan.io/address/0xddf7670719e77c54567ab95a20a4b4a455ae3895
 
-![Etherscan](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\etherscan.png)
+![etherscan](./public/etherscan.png)
 
 
 
 > Stake DApp UI
 
-![UI/UX](C:\Users\Administrator\Desktop\WORK\NTU\course\dapp\stake_dapp_ui.png)
+![UI/UX](./public/stake_dapp_ui.png)
